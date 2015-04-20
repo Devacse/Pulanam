@@ -62,14 +62,6 @@ var gaPlugin;
 //admob interstitial counter
 var num_map_views = 0;
 
-function sucessHandler(msg){
-	//alert("ok "+msg);
-}
-
-function errorHandler(msg){
-	//alert("error "+msg);
-}
-
 function dismiss(){
 	 if(gaPlugin){
 		 gaPlugin.exit(sucessHandler, errorHandler);
