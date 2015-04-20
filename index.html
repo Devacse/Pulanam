@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<meta name="viewport"
+	content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0;user-scalable=no;target-densityDpi=device-dpi" />
+
+<title>Busca Mapas</title>
+<link rel="stylesheet" href="./css/jquery.mobile-1.4.1.min.css" />
+<link rel="stylesheet" href="./css/jqm-icon-pack-fa.css" />
+<link rel="stylesheet" href="./css/leaflet.css" />
+<!--[if lte IE 8]>
+<link rel="stylesheet" href="./css/leaflet.ie.css" />
+<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="./css/jquery.jqplot.css" />
+<link rel="stylesheet" type="text/css" href="./css/buscamapas.css" />
+
+<style>
+.ui-icon-whatsapp:after {
+	background-image: url("./img/whatsapp-30.png");
+}
+
+.ui-icon-profile:after {
+	background-image: url("./img/profile-30.png");
+}
+</style>
+
+<script src="./js/config.js"></script>
+<script src="./js/jquery-1.10.0.min.js"></script>
+<script src="./js/jquery.mobile-1.4.1.min.js"></script>
+<script src="./js/initialize.js"></script>
+
+<script src="phonegap.js"></script>
+
+<script src="./js/i18next-1.7.4.js"></script>
+
+<!-- leaflet -->
+<script src="./js/leaflet/leaflet.js"></script>
+<script src="./js/leaflet_layer_plugins/vector/KML.js"></script>
+<script src="./js/leaflet/Polyline.encoded.js"></script>
+<script src="./js/buscamapas.js"></script>
+<script src="./js/leaflet_scripts.js"></script>
+<!-- wkt -->
+<script src="./js/wkt/wicket.js"></script>
+<script src="./js/wkt/wicket-leaflet.js"></script>
+<!-- user agent parser -->
+<script src="./js/ua-parser/ua-parser.min.js"></script>
+
+<!-- mapquest -->
+<script src="./js/simplify.js"></script>
+<script src="./js/mapquest.js"></script>
+
+<!-- jqplot -->
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="./js/excanvas.js"></script><![endif]-->
+<script language="javascript" type="text/javascript" src="./js/jquery.jqplot.min.js"></script>
+<script language="javascript" type="text/javascript" src="./js/jqplot.canvasAxisLabelRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="./js/jqplot.canvasTextRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="./js/jqplot.pointLabels.js"></script>
+
+
+<script>
+//google analytics plugin
+var gaPlugin;
+
+//ios no gestiona los enlaces geo:
+var isIOS = false;
+
+var localesPath = 'js/locales/__lng__/__ns__.json';
+
+function prepareMapPageShow(){
+	$(document).on( "pageshow", "#map_page", function(e, _data){
+		showMapPage();	
+	});
+}
+
+//admob interstitial counter
+var num_map_views = 0;
+
+function sucessHandler(msg){
+	//alert("ok "+msg);
+}
+
+function errorHandler(msg){
+	//alert("error "+msg);
+}
+
+function dismiss(){
+	 if(gaPlugin){
+		 gaPlugin.exit(sucessHandler, errorHandler);
+	 }
+}
+
+function initAd(){
+    if ( window.plugins && window.plugins.AdMob ) {
+	    var ad_units = {
+			//ios : {
+			//	banner: 'ca-app-pub-6869992474017983/4806197152',
+			//	interstitial: 'ca-app-pub-6869992474017983/7563979554'
+			//},
+			android : {
+				banner: 'ca-app-pub-7845495201990236/4239139752',
+				interstitial: 'ca-app-pub-7845495201990236/7528853350'
+			}
+			//,wp8 : {
+			//	banner: 'ca-app-pub-6869992474017983/8878394753',
+			//	interstitial: 'ca-app-pub-6869992474017983/1355127956'
+			//}
+	    };
+	    var admobid = "";
+	    if( /(android)/i.test(navigator.userAgent) ) {
+	    	admobid = ad_units.android;
+	    } 
+	    /*
+	    else if(/(iphone|ipad)/i.test(navigator.userAgent)) {
+	    	admobid = ad_units.ios;
+	    } else {
+	    	admobid = ad_units.wp8;
+	    }
+         */
+        window.plugins.AdMob.setOptions( {
+            publisherId: admobid.banner,
+            interstitialAdId: admobid.interstitial,
+            bannerAtTop: false, // set to true, to put banner at top
+            overlap: false, // set to true, to allow banner overlap webview
+            offsetTopBar: false, // set to true to avoid ios7 status bar overlap
+            isTesting: false, // receiving test ad
+            autoShow: true // auto show interstitial ad when loaded
+        });
+
+        window.plugins.AdMob.createBannerView();  
+    } 
+}
+
+function shareOnWhatsapp(){
+	var msg = takeAlookAt +" http://www.buscamapas.com/mapas/"+GEO_TABLE+"/"+data.friendly_url;
+	var msgurl = encodeURIComponent(msg);
+	
+	var whatsappurl = "whatsapp://send?text="+msgurl;
+	
+	 window.plugins.webintent.startActivity(
+		{ 
+	  		action: window.plugins.webintent.ACTION_VIEW, 
+	  		url: whatsappurl
+	 }, 
+	 function() {}, 
+	 function(errorMsg) {
+	     //console.log('Failed to startActivity     errorMsg=' + errorMsg); 
+	     launchMarketForWhatsApp();
+	  } 
+	 ); 
+}
+
+function launchMarketForWhatsApp() { 
+	 window.plugins.webintent.startActivity(
+	 { 
+	  	action: window.plugins.webintent.ACTION_VIEW, 
+	  	url: 'market://details?id=com.whatsapp' 
+	 }, 
+	 function() {}, 
+	 function(errorMsg) {
+	     console.log('Failed to startActivity     errorMsg=' + errorMsg); 
+	  } 
+	); 
+} 
+</script>
+</head>
+
+<body onunload="dismiss();">
+	<div data-role="page" id="main-menu">
+
+		<div data-role="header" data-position="fixed">
+			<img border="0" src="./img/lupa-map-32x32.png" alt="buscamapas.com"
+				style="float: left; display: inline" />
+			<h2 id="app_title" data-i18n>app.app_title</h2>
+
+			<a href="#menu_panel" data-icon="bars" data-iconpos="notext"
+				id="menu-button" data-theme="c" class="ui-btn-right large_button"></a>
+		</div>
+
+		<div role="main" class="ui-content" id="menu-content">
+			<h3 id="app_welcome" data-i18n>app.welcome</h3>
+			<form>
+				<a class="ui-btn ui-icon-search ui-corner-all ui-shadow"
+					href="#search-maps" data-icon="search" data-role="button"
+					id="buscar-mapas" data-i18n>app.buscar-mapas</a> <a
+					class="ui-btn  ui-icon-location ui-corner-all ui-shadow"
+					data-role="button" id="around-you" href="#maps-around-results"
+					data-i18n>app.around-you</a> <a
+					class="ui-btn  ui-icon-location ui-corner-all ui-shadow"
+					href="#fav-results" data-role="button" id="see-favs" data-i18n>app.favs</a>
+			</form>
+		</div>
+	</div>
+	<!-- formulario de busqueda -->
+	<div data-role="page" id="search-maps">
+		<div data-role="header" data-position="fixed">
+			<a data-icon="arrow-l" data-iconpos="notext" id="back-button"
+				data-theme="c" data-rel="back" class="large_button"></a>
+			<h2 id="buscar-mapas-title" data-i18n>app.buscar-mapas</h2>
+			<a href="#menu_panel" data-icon="bars" data-iconpos="notext"
+				id="menu-button" data-theme="c" class="ui-btn-right large_button"></a>
+		</div>
+		<div role="main" class="ui-content" id="search-maps-content">
+			<form id="geographic_form">
+				<label for="search-criteria" id="buscar-por-ciudad-title" data-i18n>app.buscar-mapas-descriptive</label>
+				<input type="search" name="search-criteria" id="search-criteria"
+					autocomplete="off" data-inset="true" data-role="autocomplete"
+					placeholder="Madrid (España)" data-clear-btn="true"></input>
+
+				<ul id="autocomplete-results" name="autocomplete-results"
+					data-role='listview' data-inset='true'>
+				</ul>
+				<a href="#search-maps-results" id="search-button"
+					name="search-button" data-role="button" data-theme="b" data-i18n>app.search</a>
+			</form>
+		</div>
+	</div>
+	<!-- pantalla de resultados de busqueda -->
+	<div data-role="page" id="search-maps-results">
+		<div data-role="header" data-position="fixed">
+			<a href="#search-maps" data-icon="arrow-l" data-iconpos="notext"
+				id="back-button-smr" class="large_button"></a>
+			<h2 id="buscar-mapas-result-title" style="white-space: normal;"
+				data-i18n>app.buscar-mapas-result</h2>
+			
+			<a href="#filters" 
+				id="filter_button"
+				data-role="button" 
+				data-icon="filter"
+				data-theme="c"
+				data-iconpos="notext"
+				class="ui-btn-right large_button"
+				style="background:green"></a> 
+		</div>
+	
+		<div role="main" class="ui-content" id="search-maps-result-content">
+			<div id="buscar-mapas-result-search"></div>
+			<ul id="maps-results" name="maps-results" data-role='listview'
+				data-inset='true'>
+			</ul>
+		</div>
+	</div>
+	
+	<!-- maps around you -->
+	<div data-role="page" id="maps-around-results">
+		<div data-role="header" data-position="fixed">
+			<a data-icon="arrow-l" data-iconpos="notext" id="back-button"
+				data-theme="c" data-rel="back" class="large_button"></a>
+			<h2 id="maps-around-result" style="white-space: normal;" data-i18n>app.maps-around-result</h2>
+			<a href="#filters" 
+				id="filter_button_xy"
+				data-role="button" 
+				data-icon="filter"
+				data-theme="c"
+				data-iconpos="notext"
+				class="ui-btn-right large_button"
+				style="background:green"
+				data-i18n></a>
+			
+			 <div style="text-align:center">
+				<span id='toponym'><img src='./img/big-ajax-loader.gif' /> </span>
+			</div>
+		</div>
+		<div role="main" class="ui-content" id="search-maps-result-content">
+			<div id="maps-around-result-search"></div>
+			<ul id="maps-around-results-listview"
+				name="maps-around-results-listview" data-role='listview'
+				data-inset='true'>
+			</ul>
+		</div>
+	</div>
+	
+	<!-- favoritos -->
+	<div data-role="page" id="fav-results">
+		<div data-role="header" data-position="fixed">
+			<a data-icon="arrow-l" data-iconpos="notext" id="back-button"
+				data-theme="c" data-rel="back" class="large_button"></a>
+			<h2 id="favs-header" style="white-space: normal;" data-i18n>app.favs</h2>
+			<a href="#menu_panel" data-icon="bars" data-iconpos="notext"
+				id="menu-button" data-theme="c" class="ui-btn-right large_button"></a>
+		</div>
+		<div role="main" class="ui-content" id="favs-result-content">
+			<h2 id="maps-around-result-search"></h2>
+			<ul id="favs-listview" name="favs-listview" data-role='listview'
+				data-inset='true'>
+			</ul>
+		</div>
+	</div>
+
+	<div data-role="page" id="map_page">
+		<div data-role="header" data-position="fixed" data-fullscreen="true">
+			<a data-icon="arrow-l" data-iconpos="notext" id="back-button"
+				data-theme="c" data-rel="back" class="large_button"></a>
+			<h2 id="map-title" style="white-space: normal;"></h2>
+			<a href="#map_panel" data-icon="bars" data-iconpos="notext"
+				id="menu-button" data-theme="c" class="ui-btn-right large_button"></a>
+		</div>
+		<div role="main" class="ui-content"
+			style="position: absolute; top: 0px; right: 0; bottom: 0px; left: 0; padding: 0 !important;">
+			<div id="map_container"></div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-fullscreen="true">
+			<div>
+				<a href="#description" 
+					id="map_info"
+					data-role="button" 
+					data-icon="info"
+					data-inline="true"	
+					data-iconpos="notext"
+					class="large_button">
+				</a> 
+				
+				<a href="#disqus" 
+					id="map_disqus"
+					data-role="button" 
+					data-icon="comments"
+					data-inline="true"
+						data-iconpos="notext"
+					class="large_button">
+				</a>
+				<a href="#" 
+					data-role="button" 
+					data-icon="star"
+					id="fav"
+					data-inline="true"
+						data-iconpos="notext"
+					class="large_button">
+				</a> 
+				<a href="#" 
+					data-role="button"
+					data-icon="arrow-d"  
+					id="download"
+					data-inline="true"
+					data-iconpos="notext"
+					class="large_button">
+				</a> 
+				
+				<a href="#" 
+					data-role="button"
+					id="whatsapp_button"
+					data-inline="true"
+					data-iconpos="notext"
+					class="large_button"
+					data-icon="whatsapp"
+				></a>
+				
+				<a href="#" 
+					data-role="button"
+					id="profile_button"
+					data-inline="true"
+					data-iconpos="notext"
+					class="large_button"
+					data-icon="profile"
+				></a>
+			</div>
+		</div>
+	</div>
+
+	<!--  map description -->
+	<div data-role="page" id="description" data-close-btn="right"
+		data-dialog="true">
+		<div data-role="header">
+			<h1 id="map-description" data-i18n>app.description</h1>
+		</div>
+		<div role="main" class="ui-content" id="description">
+			<h3 id="description-body"></h3>
+		</div>
+	</div>
+	
+	<div data-role="page" id="elevation_profile" data-close-btn="right"
+	data-dialog="true">
+	<div data-role="header">
+		<h1 id="elevation_profile_title" data-i18n>app.elevation_profile</h1>
+	</div>
+	<div role="main" class="ui-content" id="description">
+		<div id="chart_id"></div>
+			
+		<div class="ui-grid-a">
+			<div class="ui-block-a ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			    <h3 id="str_trails_length" data-i18n>app.trails_length</h3>
+			  </div>
+			  <div class="ui-body ui-body-a">
+			    <p id="length"></p>
+			  </div>
+			</div>
+			<div class="ui-block-b ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			    <h3 id="str_difficulty_index" data-i18n>app.Difficulty Index</h3>
+			  </div>
+			  <div class="ui-body ui-body-a">
+			    <p id="hard_index"></p>
+			  </div>
+			</div>
+		</div>	
+		
+		
+		<div class="ui-corner-all custom-corners">
+			  <div class="ui-body ui-body-a">
+			  	<h4 id="more_about_hard_idx_title_2"></h4>
+			  </div>
+		</div>	
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			    <h3 id="str_ramp" data-i18n>app.ramp</h3>
+			  </div>
+			  <div class="ui-body ui-body-a">
+			    <p id="ramp"></p>
+			  </div>
+			</div>
+			
+			<div class="ui-block-b ui-corner-all custom-corners">
+		  <div class="ui-bar ui-bar-a">
+		  <h3 id="str_hmedia" data-i18n>app.height_avg</h3>
+		  </div>
+		  <div class="ui-body ui-body-a">
+		    <p id="hmedia"></p>
+		  </div>
+		</div>
+		</div>
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			   <h3 id="str_hmax" data-i18n>app.height_max</h3>
+			  </div>
+			  <div class="ui-body ui-body-a">
+			    <p id="hmax"></p>
+			  </div>
+			</div>
+			
+			<div class="ui-block-b ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			   <h3 id="str_hmin" data-i18n>app.height_min</h3>
+			  </div>
+			  <div class="ui-body ui-body-a">
+			    <p id="hmin"></p>
+			  </div>
+			</div>
+		</div>
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			  <h3 id="str_maxaspect" data-i18n>app.slope_max</h3>
+			  </div>
+			  <div class="ui-body ui-body-a">
+			    <p id="max_aspect"></p>
+			  </div>
+			</div>
+			<div class="ui-block-b ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			  <h3 id="str_minaspect" data-i18n>app.slope_min</h3>
+			  </div>
+			  <div class="ui-body ui-body-a">
+			    <p id="min_aspect"></p>
+			  </div>
+			</div>
+		</div>
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			  <h3 id="str_avgaspectup" data-i18n>app.slope_avg_up</h3>
+			  </div>
+			  <div class="ui-body ui-body-a">
+			    <p id="avg_aspect_up"></p>
+			  </div>
+			</div>	
+			
+			<div class="ui-block-b ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			  <h3 id="str_avgaspectdown" data-i18n>app.slope_avg_down</h3>
+			  </div>
+			  <div class="ui-body ui-body-a">
+			    <p id="avg_aspect_down"></div>
+			    </p>
+			  </div>
+			</div>	
+		</div>
+	</div>
+</div>
+
+<div data-role="page" id="hard_index" data-close-btn="right" data-dialog="true">
+	<div data-role="header">
+		<h1 id="more_about_hard_idx_title" data-i18n>app.more_about_difficulty_index</h1>
+	</div>
+	<div role="main" class="ui-content" id="description">
+		<div class="ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			  	<h3 id="more_about_hard_idx_title_2" data-i18n>app.more_about_difficulty_index</h3>
+			  </div>
+			  <div class="ui-body ui-body-a">
+				  <p>
+					<img src="img/hard_index.jpg">
+					<div id="difficulty_index_description_1" data-i18n>app.difficulty_index_description_1</div>
+					<div id="difficulty_index_description_2" data-i18n>app.difficulty_index_description_2</div>
+					<div id="difficulty_index_description_3" data-i18n>app.difficulty_index_description_3</div>
+				  </p>
+			  </div>
+		</div>	
+	</div>
+</div>
+
+
+<!-- disqus -->
+<div data-role="page" id="disqus">
+	<div data-role="header" data-position="fixed">
+		<a data-icon="arrow-l" data-iconpos="notext" id="back-button"
+			data-theme="c" data-rel="back" class="large_button"></a>
+		<h2>
+			<div id="map-to-disqus"></div>
+			<div id="comment-the-map" style="white-space: normal;" data-i18n>app.comment-the-map</div>
+		</h2>
+		<a href="#menu_panel" data-icon="bars" data-iconpos="notext"
+			id="menu-button" data-theme="c" class="ui-btn-right large_button"></a>
+	</div>
+	<div role="main" class="ui-content">
+		<div id="disqus_thread">
+		<span><div style="text-align:center"><img src='./img/big-ajax-loader.gif' /></div></span>
+		</div>
+	</div>
+</div>
+	
+	<!--  about us -->
+	<div data-role="page" id="about_us">
+		<div data-role="header" data-position="fixed">
+			<a data-icon="arrow-l" data-iconpos="notext" id="back-button"
+				data-theme="c" data-rel="back" class="large_button"></a>
+			<h2 id="about_us_header" data-i18n>app.about</h2>
+			<a href="#menu_panel" data-icon="bars" data-iconpos="notext"
+				id="menu-button" data-theme="c" class="ui-btn-right large_button"></a>
+		</div>
+		<div role="main" class="ui-content">
+			<p style="text-align:justify" id="about_us_content" data-i18n>app.about_content</p>
+			<ul data-role="listview" data-inset="true">
+					<li><a href="http://www.twitter.com/buscamapas">@buscamapas</a></li>
+					<li><a href="mailto:buscamapas.com@gmail.com" data-icon="mail">buscamapas.com <i>arroba</i> gmail.com</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div data-role="panel" 
+		 id="map_panel" 
+		 data-position="left"
+		 data-display="overlay" 
+		 data-theme="a"  
+	>
+	       <h2 id="map_panel_general_title" data-i18n>app.general</h2>
+		 	<ul data-role="listview" id="map_panel_listview" data-inset="true">
+               		<li data-icon="false"><a href="#main-menu" id="home-button-menu" data-theme="c" data-i18n>app.home</a>
+					</li>
+					<li data-icon="false"><a href="#about_us" id="about-button-menu"
+					data-theme="c" data-i18n>app.about</a>
+					</li>
+         	</ul>		
+         	<h2 id="map_panel_tools_title" data-i18n>app.tools</h2>
+		 	<ul data-role="listview" id="tools_listview" data-inset="true">
+               		<li data-icon="false" data-inset="false">
+               			<a href="#" id="whatsapp" data-i18n>app.share_whatsapp</a>
+					</li>
+					
+					<li data-icon="false">
+						<a href="#" 
+							id="gps"
+							data-theme="c" 
+							data-icon="navigation"
+							data-i18n>app.my_location</a>
+					</li>
+					
+					<li data-icon="false">
+						<a href="#" 
+							id="fav2"
+							data-theme="c" 
+							data-icon="star"
+							data-i18n>app.mark-fav</a>
+					</li>
+         	</ul>	
+         	<a 
+         	   id="close_map_panel"
+         	   data-rel="close"
+			   class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-left ui-btn-inline"
+			   data-i18n>app.close</a>
+	</div>
+	
+	<div data-role="panel" 
+		 id="menu_panel" 
+		 data-position="left"
+		 data-display="overlay" 
+		 data-theme="a"  
+	>
+	       <h2 id="menu_panel_general_title" data-i18n>app.general</h2>
+		 	<ul data-role="listview" id="menu_panel_listview" data-inset="true">
+               		<li data-icon="false"><a href="#main-menu" id="home-button-menu2" data-theme="c" data-i18n>app.home</a>
+					</li>
+					<li data-icon="false"><a href="#about_us" id="about-button-menu2"
+					data-theme="c" data-i18n>app.about</a>
+					</li>
+        	</ul>	
+         	<h2 id="menu_panel_share_title" data-i18n>app.share</h2>
+		 	<ul data-role="listview" id="share_listview" data-inset="true">
+               		<li data-icon="false" data-inset="false">
+               			<a href="#" id="whatsapp2" data-i18n>app.share_whatsapp</a>
+					</li>
+         	</ul>	
+         	<a 
+         	   id="close_menu_panel"
+         	   data-rel="close"
+			   class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-left ui-btn-inline"
+			   data-i18n>app.close</a>
+	</div>
+	
+	<!-- filters dialog -->
+<!-- filtros a aplicar en las busquedas -->
+<div data-role="page" id="filters">
+	<div data-role="header" data-position="fixed">
+		<a data-icon="arrow-l" data-iconpos="notext" id="back-button"
+			data-theme="c" data-rel="back" class="large_button"></a>
+		<h2 id="filters-title" data-i18n>app.filters</h2>
+		<a href="#menu_panel" data-icon="bars" data-iconpos="notext"
+			id="menu-button" data-theme="c" class="ui-btn-right large_button"></a>
+	</div>
+
+	<div role="main" class="ui-content" id="filters-content">
+		<h3 id="filters-h3" data-i18n>app.filters</h3>
+		<div data-role="rangeslider">
+			<label id="filter-distance-1" for="range-distance-min" data-i18n>app.filter_distance</label>
+			<input name="range-distance-min" id="range-distance-min" min="0" max="150" value="0" type="range" style="display:none" data-show-value="true" step="1"/>
+			<label id="filter-distance-2" for="range-distance-max" data-i18n>app.filter_distance</label>
+			<input name="range-distance-max" id="range-distance-max" min="0" max="150" value="150" type="range" style="display:none" data-show-value="true" step="1"/>
+		</div>
+		
+		<div data-role="rangeslider">
+			<label id="filter-desnivel-1" for="range-desnivel-min" data-i18n>app.filter_desnivel</label>
+			<input name="range-desnivel-min" id="range-desnivel-min" min="0" max="1200" value="0" type="range"  style="display:none" data-show-value="true" step="1" />
+			<label id="filter-desnivel-2" for="range-desnivel-max" data-i18n>app.filter_desnivel</label>
+			<input name="range-desnivel-max" id="range-desnivel-max" min="0" max="1200" value="1200" type="range"  style="display:none" data-show-value="true" step="1" />
+		</div>
+		
+		<div data-role="rangeslider">
+			<label id="filter-dureza-1" for="range-dureza-min" data-i18n>app.filter_dureza</label>
+			<input name="range-dureza-min" id="range-dureza-min" min="0" max="110" value="0" type="range"  style="display:none" data-show-value="true" step="1" />
+			<label id="filter-dureza-2" for="range-dureza-max" data-i18n>app.filter_dureza</label>
+			<input name="range-dureza-max" id="range-dureza-max" min="0" max="110" value="110" type="range"  style="display:none" data-show-value="true" step="1"/>
+		</div>
+		
+		<h3 id="sort-h3" data-i18n>app.sort</h3>
+			<div data-role="fieldcontain">
+			    <fieldset data-role="controlgroup" data-type="horizontal">
+			         	<input type="radio" name="sorts" id="dist_sort" value="Square_Dist" checked />
+			         	<label id="sort-dist" for="dist_sort" data-i18n>app.sort_distance</label>
+			         	<input type="radio" name="sorts" id="length_sort" value="LINE_LENGTH"   />
+			         	<label id="sort-length" for="length_sort" data-i18n>app.sort_length</label>
+			         	<input type="radio" name="sorts" id="hard_sort" value="HARD_INDEX"  />
+			         	<label id="sort-hard" for="hard_sort" data-i18n>app.sort_difficult</label>
+			         	<input type="radio" name="sorts" id="desnivel_sort" value="DESNIVEL"  />
+			         	<label id="sort-desnivel" for="desnivel_sort" data-i18n>app.sort_desnivel</label>
+			    </fieldset>
+			    
+			    <div data-role="fieldcontain">
+			    <fieldset data-role="controlgroup" data-type="horizontal">
+			         	<input type="radio" name="direction" id="asc" value="ASC"  checked/>
+			         	<label id="sort-asc" for="asc" data-i18n>app.asc</label>
+			         	
+			         	<input type="radio" name="direction" id="desc" value="DESC"  />
+			         	<label id="sort-desc" for="desc" data-i18n>app.desc</label>
+			    </fieldset>
+			</div>	
+	</div>
+	
+	<div data-role="footer" class="ui-bar">
+			<a 	id="filter-ok" data-role="button" data-rel="back" data-i18n>app.OK</a>
+			<a 	id="filter-delete" data-role="button"  data-i18n>app.DELETE_FILTERS</a>
+	</div>	
+</div>
+	
+	<script>
+		initTextsAndBgImages();
+		//document.addEventListener("deviceready", onDeviceReady, true);
+		onDeviceReady();
+		document.addEventListener("deviceready", function(){
+			initAd();
+			navigator.splashscreen.hide();
+			if(window.plugins.gaPlugin){
+				gaPlugin = window.plugins.gaPlugin;
+		    	gaPlugin.init(sucessHandler, errorHandler, "UA-56863485-1", 10);
+			}
+		}, false);
+	</script>
+</body>
+</html>
