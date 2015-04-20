@@ -170,28 +170,36 @@ function launchMarketForWhatsApp() {
 <body onunload="dismiss();">
 	<div data-role="page" id="main-menu">
 
-		<div data-role="header" data-position="fixed">
-			<img border="0" src="./img/lupa-map-32x32.png" alt="buscamapas.com"
-				style="float: left; display: inline" />
-			<h2 id="app_title" data-i18n>app.app_title</h2>
+<div data-role="header" data-position="fixed" data-theme="d">
+<a href="#menu" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-btn-left ui-nodisc-icon"></a>
+<h1>புலனம்</h1>
+<a href="#omtamil" class="ui-btn ui-icon-grid ui-btn-icon-notext ui-btn-right ui-nodisc-icon ui-alt-icon">OMTAMIL</a>
+</div>
 
-			<a href="#menu_panel" data-icon="bars" data-iconpos="notext"
-				id="menu-button" data-theme="c" class="ui-btn-right large_button"></a>
-		</div>
+<div data-role="panel" id="menu" data-position="left" data-theme="d" data-display="overlay">
+<ul data-role="listview">
+<li data-icon="home" data-theme="e"><a href="#" data-rel="close">புதியப் புலனம்</a></li>
+<li data-icon="action"><a href="language.html" rel="external">மொழி</a></li>
+<li data-icon="action"><a href="race.html" rel="external">இனம்</a></li>
+<li data-icon="action"><a href="culture.html" rel="external">பண்பாடு</a></li>
+<li data-icon="action"><a href="technology.html" rel="external">தொழில்நுட்பம்</a></li>
+<li data-icon="action"><a href="science.html" rel="external">அறிவியல்</a></li>
+<li data-icon="action"><a href="business.html" rel="external">வணிகம்</a></li>
+<li data-icon="info"><a href="info.html" rel="external">இச்செயலிப் பற்றி</a></li>
+</ul>
 
-		<div role="main" class="ui-content" id="menu-content">
-			<h3 id="app_welcome" data-i18n>app.welcome</h3>
-			<form>
-				<a class="ui-btn ui-icon-search ui-corner-all ui-shadow"
-					href="#search-maps" data-icon="search" data-role="button"
-					id="buscar-mapas" data-i18n>app.buscar-mapas</a> <a
-					class="ui-btn  ui-icon-location ui-corner-all ui-shadow"
-					data-role="button" id="around-you" href="#maps-around-results"
-					data-i18n>app.around-you</a> <a
-					class="ui-btn  ui-icon-location ui-corner-all ui-shadow"
-					href="#fav-results" data-role="button" id="see-favs" data-i18n>app.favs</a>
-			</form>
-		</div>
+</div>
+
+<div data-role="panel" id="omtamil" data-position="right data-theme="a" data-display="push">
+<ul data-role="listview">
+<img src="img/omtamil.png" width="100%">
+</ul>
+</div>
+
+<div data-role="main" data-role="content" class="ui-content" data-theme="b">
+<ul data-role="listview" id="postsList" data-theme="a"  data-filter="true" data-inset="true" data-filter-placeholder="தேடவும்">		
+</ul>       
+</div>
 	</div>
 	<!-- formulario de busqueda -->
 	<div data-role="page" id="search-maps">
