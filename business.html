@@ -1,102 +1,20 @@
-<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
 
-<meta name="viewport"
-	content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0;user-scalable=no;target-densityDpi=device-dpi" />
-
+<meta charset="UTF-8">
 <title>புலனம் செயலி</title>
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1"> 
+<meta name="robots" content="noindex">
+
+<link rel="stylesheet" href="css/jquery.mobile.min.css">
 <link rel="stylesheet" href="css/Bootstrap.css">
-<link rel="stylesheet" href="./css/jquery.mobile-1.4.1.min.css" />
-<link rel="stylesheet" href="./css/jqm-icon-pack-fa.css" />
-
-<!--[if lte IE 8]>
-<link rel="stylesheet" href="./css/leaflet.ie.css" />
-<![endif]-->
-
-
-
-
-<script src="phonegap.js"></script>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.mobile.min.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 
-
-<script>
-//google analytics plugin
-var gaPlugin;
-
-//ios no gestiona los enlaces geo:
-var isIOS = false;
-
-var localesPath = 'js/locales/__lng__/__ns__.json';
-
-
-//admob interstitial counter
-var num_map_views = 0;
-
-function sucessHandler(msg){
-	//alert("ok "+msg);
-}
-
-function errorHandler(msg){
-	//alert("error "+msg);
-}
-
-function dismiss(){
-	 if(gaPlugin){
-		 gaPlugin.exit(sucessHandler, errorHandler);
-	 }
-}
-
-function initAd(){
-    if ( window.plugins && window.plugins.AdMob ) {
-	    var ad_units = {
-			//ios : {
-			//	banner: 'ca-app-pub-6869992474017983/4806197152',
-			//	interstitial: 'ca-app-pub-6869992474017983/7563979554'
-			//},
-			android : {
-				banner: 'ca-app-pub-0587745999037652/3416124857',
-				interstitial: 'ca-app-pub-0587745999037652/9323057655'
-			}
-			//,wp8 : {
-			//	banner: 'ca-app-pub-6869992474017983/8878394753',
-			//	interstitial: 'ca-app-pub-6869992474017983/1355127956'
-			//}
-	    };
-	    var admobid = "";
-	    if( /(android)/i.test(navigator.userAgent) ) {
-	    	admobid = ad_units.android;
-	    } 
-	    /*
-	    else if(/(iphone|ipad)/i.test(navigator.userAgent)) {
-	    	admobid = ad_units.ios;
-	    } else {
-	    	admobid = ad_units.wp8;
-	    }
-         */
-        window.plugins.AdMob.setOptions( {
-            publisherId: admobid.banner,
-            interstitialAdId: admobid.interstitial,
-            bannerAtTop: false, // set to true, to put banner at top
-            overlap: false, // set to true, to allow banner overlap webview
-            offsetTopBar: false, // set to true to avoid ios7 status bar overlap
-            isTesting: false, // receiving test ad
-            autoShow: true // auto show interstitial ad when loaded
-        });
-
-        window.plugins.AdMob.createBannerView();  
-    } 
-}
-
-</script>
 </head>
-
-<body onunload="dismiss();">
-<div data-role="page" id="postBusiness">
+<body>
+<div data-role="page" id="postBusiness" data-theme="b">
 	
 	
 <div data-role="header" data-position="fixed" data-theme="d">
@@ -132,21 +50,6 @@ OMTAMIL
 </div>
 
 </div> 
-	<div data-role="footer" class="ui-bar">
-	</div>	
-	
-	<script>
-		initTextsAndBgImages();
-		//document.addEventListener("deviceready", onDeviceReady, true);
-		onDeviceReady();
-		document.addEventListener("deviceready", function(){
-			initAd();
-			navigator.splashscreen.hide();
-			if(window.plugins.gaPlugin){
-				gaPlugin = window.plugins.gaPlugin;
-		    	gaPlugin.init(sucessHandler, errorHandler, "UA-36976172-11", 10);
-			}
-		}, false);
-	</script>
+
 </body>
 </html>
