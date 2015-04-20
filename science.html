@@ -1,20 +1,32 @@
+<!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
 
-<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0;user-scalable=no;target-densityDpi=device-dpi" />
+
 <title>புலனம் செயலி</title>
-<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1"> 
-<meta name="robots" content="noindex">
-
-<link rel="stylesheet" href="css/jquery.mobile.min.css">
 <link rel="stylesheet" href="css/Bootstrap.css">
+<link rel="stylesheet" href="./css/jquery.mobile-1.4.1.min.css" />
+<link rel="stylesheet" href="./css/jqm-icon-pack-fa.css" />
+
+<!--[if lte IE 8]>
+<link rel="stylesheet" href="./css/leaflet.ie.css" />
+<![endif]-->
+
+
+
+
+<script src="phonegap.js"></script>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.mobile.min.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 
 </head>
-<body>
-<div data-role="page" id="postScience" data-theme="b">
+
+<body onunload="dismiss();">
+<div data-role="page" id="postScience">
 	
 	
 <div data-role="header" data-position="fixed" data-theme="d">
