@@ -58,16 +58,6 @@
 //google analytics plugin
 var gaPlugin;
 
-//ios no gestiona los enlaces geo:
-var isIOS = false;
-
-var localesPath = 'js/locales/__lng__/__ns__.json';
-
-function prepareMapPageShow(){
-	$(document).on( "pageshow", "#map_page", function(e, _data){
-		showMapPage();	
-	});
-}
 
 //admob interstitial counter
 var num_map_views = 0;
@@ -127,37 +117,8 @@ function initAd(){
     } 
 }
 
-function shareOnWhatsapp(){
-	var msg = takeAlookAt +" http://www.buscamapas.com/mapas/"+GEO_TABLE+"/"+data.friendly_url;
-	var msgurl = encodeURIComponent(msg);
-	
-	var whatsappurl = "whatsapp://send?text="+msgurl;
-	
-	 window.plugins.webintent.startActivity(
-		{ 
-	  		action: window.plugins.webintent.ACTION_VIEW, 
-	  		url: whatsappurl
-	 }, 
-	 function() {}, 
-	 function(errorMsg) {
-	     //console.log('Failed to startActivity     errorMsg=' + errorMsg); 
-	     launchMarketForWhatsApp();
-	  } 
-	 ); 
-}
 
-function launchMarketForWhatsApp() { 
-	 window.plugins.webintent.startActivity(
-	 { 
-	  	action: window.plugins.webintent.ACTION_VIEW, 
-	  	url: 'market://details?id=com.whatsapp' 
-	 }, 
-	 function() {}, 
-	 function(errorMsg) {
-	     console.log('Failed to startActivity     errorMsg=' + errorMsg); 
-	  } 
-	); 
-} 
+ 
 </script>
 </head>
 
@@ -173,9 +134,7 @@ function launchMarketForWhatsApp() {
         </div>
     </div> 
 
-		<div data-role="footer" class="ui-bar">
-			<a 	id="filter-ok" data-role="button" data-rel="back" data-i18n>app.OK</a>
-			<a 	id="filter-delete" data-role="button"  data-i18n>app.DELETE_FILTERS</a>
+	<div data-role="footer" class="ui-bar">
 	</div>	
 	
 	<script>
