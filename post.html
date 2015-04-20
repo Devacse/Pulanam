@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -162,42 +162,18 @@ function launchMarketForWhatsApp() {
 </head>
 
 <body onunload="dismiss();">
-<div data-role="page" id="postIndex">
+    <div data-role="page" id="postPage" data-theme="d">
+        <div data-role="header" data-position="fixed" data-theme="d">
+            <a href="javascript:goBack();" data-role="button" data-icon="back" data-rel="back" data-iconpos="notext" class="ui-nodisc-icon">Geri</a>
 
-<div data-role="header" data-position="fixed" data-theme="d">
-<a href="#menu" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-btn-left ui-nodisc-icon"></a>
-<h1>புலனம்</h1>
-<a href="#omtamil" class="ui-btn ui-icon-grid ui-btn-icon-notext ui-btn-right ui-nodisc-icon ui-alt-icon">OMTAMIL</a>
-</div>
+            <h1 id="title">புலனம்</h1>
+        </div>
+        <div data-role="main" data-role="content" class="ui-content" data-theme="b">
+              <div id="post" class="ui-body ui-body-a"></div>
+        </div>
+    </div> 
 
-<div data-role="panel" id="menu" data-position="left" data-theme="d" data-display="overlay">
-<ul data-role="listview">
-<li data-icon="home" data-theme="e"><a href="#" data-rel="close">புதியப் புலனம்</a></li>
-<li data-icon="action"><a href="language.html" rel="external">மொழி</a></li>
-<li data-icon="action"><a href="race.html" rel="external">இனம்</a></li>
-<li data-icon="action"><a href="culture.html" rel="external">பண்பாடு</a></li>
-<li data-icon="action"><a href="technology.html" rel="external">தொழில்நுட்பம்</a></li>
-<li data-icon="action"><a href="science.html" rel="external">அறிவியல்</a></li>
-<li data-icon="action"><a href="business.html" rel="external">வணிகம்</a></li>
-<li data-icon="info"><a href="info.html" rel="external">இச்செயலிப் பற்றி</a></li>
-</ul>
-
-</div>
-
-<div data-role="panel" id="omtamil" data-position="right data-theme="a" data-display="push">
-<ul data-role="listview">
-<img src="img/omtamil.png" width="100%">
-</ul>
-</div>
-
-<div data-role="main" data-role="content" class="ui-content" data-theme="b">
-<ul data-role="listview" id="postsList" data-theme="a"  data-filter="true" data-inset="true" data-filter-placeholder="தேடவும்">		
-</ul>       
-</div>
-	</div>
-	
-	
-	<div data-role="footer" class="ui-bar">
+		<div data-role="footer" class="ui-bar">
 			<a 	id="filter-ok" data-role="button" data-rel="back" data-i18n>app.OK</a>
 			<a 	id="filter-delete" data-role="button"  data-i18n>app.DELETE_FILTERS</a>
 	</div>	
