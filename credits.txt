@@ -1,0 +1,8 @@
+bgimage1 - https://www.flickr.com/photos/butchgaudy/
+ https://www.flickr.com/photos/butchgaudy/3231932108/sizes/o/
+
+bgimage2 - https://www.flickr.com/photos/holidaybavaria/	
+
+bgimage3 - https://www.flickr.com/photos/34460338@N02/	
+
+bgimage4 - https://www.flickr.com/photos/sportcommunities/	

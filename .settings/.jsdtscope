@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="wkt/|leaflet_layer_plugins/|ua-parser/|leaflet/|leaflet_layer_plugins/tile/|leaflet_layer_plugins/vector/" kind="src" path="www/js"/>
+	<classpathentry kind="src" path="www/js/leaflet"/>
+	<classpathentry excluding="tile/|vector/" kind="src" path="www/js/leaflet_layer_plugins"/>
+	<classpathentry kind="src" path="www/js/leaflet_layer_plugins/tile"/>
+	<classpathentry kind="src" path="www/js/leaflet_layer_plugins/vector"/>
+	<classpathentry kind="src" path="www/js/ua-parser"/>
+	<classpathentry kind="src" path="www/js/wkt"/>
+	<classpathentry excluding="lib/jasmine-1.2.0/" kind="src" path="www/spec"/>
+	<classpathentry kind="src" path="www/spec/lib/jasmine-1.2.0"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>
