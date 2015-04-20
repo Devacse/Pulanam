@@ -10,18 +10,48 @@
 <link rel="stylesheet" href="css/Bootstrap.css">
 <link rel="stylesheet" href="./css/jquery.mobile-1.4.1.min.css" />
 <link rel="stylesheet" href="./css/jqm-icon-pack-fa.css" />
-
+<link rel="stylesheet" href="./css/leaflet.css" />
 <!--[if lte IE 8]>
 <link rel="stylesheet" href="./css/leaflet.ie.css" />
 <![endif]-->
 
+<link rel="stylesheet" type="text/css" href="./css/jquery.jqplot.css" />
+<link rel="stylesheet" type="text/css" href="./css/buscamapas.css" />
 
 
+<script src="./js/config.js"></script>
+
+<script src="./js/initialize.js"></script>
 
 <script src="phonegap.js"></script>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.mobile.min.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
+
+<script src="./js/i18next-1.7.4.js"></script>
+
+<!-- leaflet -->
+<script src="./js/leaflet/leaflet.js"></script>
+<script src="./js/leaflet_layer_plugins/vector/KML.js"></script>
+<script src="./js/leaflet/Polyline.encoded.js"></script>
+<script src="./js/buscamapas.js"></script>
+<script src="./js/leaflet_scripts.js"></script>
+<!-- wkt -->
+<script src="./js/wkt/wicket.js"></script>
+<script src="./js/wkt/wicket-leaflet.js"></script>
+<!-- user agent parser -->
+<script src="./js/ua-parser/ua-parser.min.js"></script>
+
+<!-- mapquest -->
+<script src="./js/simplify.js"></script>
+<script src="./js/mapquest.js"></script>
+
+<!-- jqplot -->
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="./js/excanvas.js"></script><![endif]-->
+<script language="javascript" type="text/javascript" src="./js/jquery.jqplot.min.js"></script>
+<script language="javascript" type="text/javascript" src="./js/jqplot.canvasAxisLabelRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="./js/jqplot.canvasTextRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="./js/jqplot.pointLabels.js"></script>
 
 
 <script>
@@ -33,6 +63,11 @@ var isIOS = false;
 
 var localesPath = 'js/locales/__lng__/__ns__.json';
 
+function prepareMapPageShow(){
+	$(document).on( "pageshow", "#map_page", function(e, _data){
+		showMapPage();	
+	});
+}
 
 //admob interstitial counter
 var num_map_views = 0;
@@ -92,6 +127,37 @@ function initAd(){
     } 
 }
 
+function shareOnWhatsapp(){
+	var msg = takeAlookAt +" http://www.buscamapas.com/mapas/"+GEO_TABLE+"/"+data.friendly_url;
+	var msgurl = encodeURIComponent(msg);
+	
+	var whatsappurl = "whatsapp://send?text="+msgurl;
+	
+	 window.plugins.webintent.startActivity(
+		{ 
+	  		action: window.plugins.webintent.ACTION_VIEW, 
+	  		url: whatsappurl
+	 }, 
+	 function() {}, 
+	 function(errorMsg) {
+	     //console.log('Failed to startActivity     errorMsg=' + errorMsg); 
+	     launchMarketForWhatsApp();
+	  } 
+	 ); 
+}
+
+function launchMarketForWhatsApp() { 
+	 window.plugins.webintent.startActivity(
+	 { 
+	  	action: window.plugins.webintent.ACTION_VIEW, 
+	  	url: 'market://details?id=com.whatsapp' 
+	 }, 
+	 function() {}, 
+	 function(errorMsg) {
+	     console.log('Failed to startActivity     errorMsg=' + errorMsg); 
+	  } 
+	); 
+} 
 </script>
 </head>
 
