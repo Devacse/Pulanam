@@ -16,7 +16,7 @@ var postid = getQueryVariable("id");
 
 $( document ).on( "pagebeforeshow", "#postIndex", function() {
 
-	var url = "http://123malaysia.com/pulanam/api/get_recent_posts/?json=1&count=100";
+	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=1&count=100";
 
 		$.ajax({
 		   type: 'GET',
@@ -46,7 +46,7 @@ $( document ).on( "pagebeforeshow", "#postIndex", function() {
 
 $( document ).on( "pagebeforeshow", "#postLanguage", function() {
 
-	var url = "http://123malaysia.com/pulanam/api/get_recent_posts/?json=get_category_posts&slug=language&count=100";
+	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=language&count=100";
 
 		$.ajax({
 		   type: 'GET',
@@ -73,7 +73,7 @@ $( document ).on( "pagebeforeshow", "#postLanguage", function() {
 
 $( document ).on( "pagebeforeshow", "#postRace", function() {
 
-	var url = "http://123malaysia.com/pulanam/api/get_recent_posts/?json=get_category_posts&slug=race&count=100";
+	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=race&count=100";
 
 		$.ajax({
 		   type: 'GET',
@@ -100,7 +100,7 @@ $( document ).on( "pagebeforeshow", "#postRace", function() {
 
 $( document ).on( "pagebeforeshow", "#postCulture", function() {
 
-	var url = "http://123malaysia.com/pulanam/api/get_recent_posts/?json=get_category_posts&slug=culture&count=100";
+	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=culture&count=100";
 
 		$.ajax({
 		   type: 'GET',
@@ -127,7 +127,7 @@ $( document ).on( "pagebeforeshow", "#postCulture", function() {
 
 $( document ).on( "pagebeforeshow", "#postTechnology", function() {
 
-	var url = "http://123malaysia.com/pulanam/api/get_recent_posts/?json=get_category_posts&slug=technology&count=100";
+	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=technology&count=100";
 
 		$.ajax({
 		   type: 'GET',
@@ -154,7 +154,7 @@ $( document ).on( "pagebeforeshow", "#postTechnology", function() {
 
 $( document ).on( "pagebeforeshow", "#postScience", function() {
 
-	var url = "http://123malaysia.com/pulanam/api/get_recent_posts/?json=get_category_posts&slug=science&count=100";
+	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=science&count=100";
 
 		$.ajax({
 		   type: 'GET',
@@ -181,7 +181,7 @@ $( document ).on( "pagebeforeshow", "#postScience", function() {
 
 $( document ).on( "pagebeforeshow", "#postBusiness", function() {
 
-	var url = "http://123malaysia.com/pulanam/api/get_recent_posts/?json=get_category_posts&slug=business&count=100";
+	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=business&count=100";
 
 		$.ajax({
 		   type: 'GET',
@@ -213,7 +213,7 @@ $( document ).on( "pagebeforeshow", "#postBusiness", function() {
 $( document ).on( "pagebeforeshow", "#postPage", function() {
                 
     var postid = getQueryVariable("id");
-    var url = "http://123malaysia.com/pulanam/api/get_post/?post_id="+postid+"&callback=?";
+    var url = "http://pulanam.omtamil.com/api/get_post/?post_id="+postid+"&callback=?";
 
     $.ajax({
        type: 'GET',
