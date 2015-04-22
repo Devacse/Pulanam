@@ -7,3 +7,6 @@
 
 - Pull to refresh latest contents
 - Push Notifications
+- Font resize
+- Content Page remove box
+- Add more category
