@@ -16,7 +16,7 @@ var postid = getQueryVariable("id");
 
 $( document ).on( "pagebeforeshow", "#postIndex", function() {
 
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=1&count=100";
+	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=1&count=300";
 
 		$.ajax({
 		   type: 'GET',
@@ -237,6 +237,33 @@ $( document ).on( "pagebeforeshow", "#postFinance", function() {
 $( document ).on( "pagebeforeshow", "#postHistory", function() {
 
 	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=history&count=100";
+
+		$.ajax({
+		   type: 'GET',
+		    url: url,
+		    async: false,
+		    jsonpCallback: 'callback',
+		    contentType: "application/json",
+		    dataType: 'jsonp',
+		    success: function(json) {
+		    	if(json.status=="ok") {
+					posts(json);
+		    	}
+		    	else {
+		    		console.log("error");
+		    	}
+		       
+		    },
+		    error: function(e) {
+		       console.log(e.message);
+		    }
+		});
+	 
+});
+
+$( document ).on( "pagebeforeshow", "#postPhilosophy", function() {
+
+	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=philosophy&count=100";
 
 		$.ajax({
 		   type: 'GET',
