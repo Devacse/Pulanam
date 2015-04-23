@@ -7,7 +7,6 @@
 - Pull to refresh latest contents
 - Push Notifications
 - Tamil font
-- 
 
 # Version History
 
