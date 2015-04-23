@@ -354,7 +354,7 @@ function post(json) {
 
 	document.getElementById("title").innerHTML = json.post.title;
 
-    var html = "<h1>"+json.post.title+"</h1>";
+    var html = "<h3>"+json.post.title+"</h3>";
     html += "<p>"+json.post.content+"</p>";
 
 	document.getElementById("post").innerHTML = html;
@@ -399,7 +399,7 @@ function posts(json) {
 	  		var date = "null";
 	  	}
         
-        html = html + "<li>" + "<a href=\"post.html?id=" + postid + "\">" + '<img src="' + postthumbnail + '"/ height="80px"/ width="80px"/>' + "<h2>" + postcontent + "</h2>" + "<p>" + date + "</p></a></li>";
+        html = html + "<li data-icon=\"false" + "\">" + "<a href=\"post.html?id=" + postid + "\">" + '<img src="' + postthumbnail + '"/ height="80px"/ width="80px"/>' + "<h3>" + postcontent + "</h3>" + "<p>" + date + "</p></a></li>";
         
         document.getElementById("postsList").innerHTML = html;
         $("#postsList").listview("refresh");
