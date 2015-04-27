@@ -4,10 +4,11 @@
 
 # To Do List
 
-- Pull to refresh latest contents
-- Scroll to bottom to load more contents
+- Scroll to bottom to load more contents (“Infinite” Scroll to Load More Content)
 - Push Notifications
+- Load offline contents
 - Custom Tamil fonts
+- Pull to refresh latest contents
 
 # Version History
 
