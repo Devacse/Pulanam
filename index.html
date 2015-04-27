@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="./css/jquery.mobile-1.4.1.min.css" />
 <link rel="stylesheet" href="./css/jqm-icon-pack-fa.css" />
 <link rel="stylesheet" href="./css/leaflet.css" />
+<link rel="stylesheet" href="./css/jquery.scrollz.css" />
 <!--[if lte IE 8]>
 <link rel="stylesheet" href="./css/leaflet.ie.css" />
 <![endif]-->
@@ -53,7 +54,8 @@
 <script language="javascript" type="text/javascript" src="./js/jqplot.canvasTextRenderer.js"></script>
 <script language="javascript" type="text/javascript" src="./js/jqplot.pointLabels.js"></script>
 
-
+<!-- scrollz -->
+<script src="./js/jquery.scrollz.js"></script>
 <script>
 //google analytics plugin
 var gaPlugin;
@@ -207,7 +209,7 @@ function launchMarketForWhatsApp() {
 </ul>
 </div>
 
-<div data-role="main" data-role="content" class="ui-content" data-theme="b">
+<div data-role="main" data-role="content" class="ui-content" data-theme="b" data-scrollz="pull" id="content">
 <ul data-role="listview" id="postsList" data-theme="a" data-filter="true" data-inset="true" data-filter-placeholder="தேடவும்">		
 </ul>       
 </div>
@@ -229,6 +231,6 @@ function launchMarketForWhatsApp() {
 		    	gaPlugin.init(sucessHandler, errorHandler, "UA-36976172-11", 10);
 			}
 		}, false);
-	</script>
+	</script>	
 </body>
 </html>
