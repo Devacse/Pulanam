@@ -5,9 +5,8 @@
 # To Do List
 
 - Pull to refresh latest contents
-- Scroll to bottom to load more contents
 - Push Notifications
-- Custom Tamil fonts
+- Tamil font
 
 # Version History
 
