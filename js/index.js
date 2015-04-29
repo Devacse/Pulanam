@@ -16,7 +16,7 @@ var postid = getQueryVariable("id");
 
 $( document ).on( "pagebeforeshow", "#postIndex", function() {
 
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=1&count=300";
+	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=1&count=100";
 
 		$.ajax({
 		   type: 'GET',
