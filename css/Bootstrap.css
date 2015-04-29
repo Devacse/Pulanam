@@ -16,6 +16,17 @@
 html {
 	font-size: 100%;
 }
+
+iframe,
+embed,
+img,
+object,
+.ui-content {
+max-width: 100%;
+height: auto;
+}
+
+
 body,
 input,
 select,
