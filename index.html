@@ -42,6 +42,17 @@
 <!-- user agent parser -->
 <script src="./js/ua-parser/ua-parser.min.js"></script>
 
+<!-- mapquest -->
+<script src="./js/simplify.js"></script>
+<script src="./js/mapquest.js"></script>
+
+<!-- jqplot -->
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="./js/excanvas.js"></script><![endif]-->
+<script language="javascript" type="text/javascript" src="./js/jquery.jqplot.min.js"></script>
+<script language="javascript" type="text/javascript" src="./js/jqplot.canvasAxisLabelRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="./js/jqplot.canvasTextRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="./js/jqplot.pointLabels.js"></script>
+
 
 <script>
 //google analytics plugin
@@ -51,6 +62,12 @@ var gaPlugin;
 var isIOS = false;
 
 var localesPath = 'js/locales/__lng__/__ns__.json';
+
+function prepareMapPageShow(){
+	$(document).on( "pageshow", "#map_page", function(e, _data){
+		showMapPage();	
+	});
+}
 
 //admob interstitial counter
 var num_map_views = 0;
