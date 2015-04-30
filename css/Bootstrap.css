@@ -13,8 +13,62 @@
 /* Globals */
 /* Font
 -----------------------------------------------------------------------------------------------------------*/
+
+@font-face {
+    font-family: 'Droid Sans Tamil';
+	  font-style: normal;
+    src: url('../font/DroidSansTamil-Regular.eot');
+    src: url('../font/DroidSansTamil-Regular.eot?#iefix') format('embedded-opentype'),
+         url('../font/DroidSansTamil-Regular.woff') format('woff'),
+		 url('../font/DroidSansTamil-Regular.woff2') format('woff2'),
+         url('../font/DroidSansTamil-Regular.ttf') format('truetype');
+  font-weight: 400;
+  }
+  
+  @font-face {
+  font-family: 'Droid Sans Tamil';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../font/DroidSansTamil-Bold.eot');
+  src: url('../font/DroidSansTamil-Bold.eot?#iefix') format('embedded-opentype'),
+       url('../font/DroidSansTamil-Bold.woff2') format('woff2'),
+       url('../font/DroidSansTamil-Bold.woff') format('woff'),
+       url('../font/DroidSansTamil-Bold.ttf') format('truetype');
+}
+  
+ @font-face {
+    font-family: 'Noto Sans Tamil';
+	  font-style: normal;
+    src: url('../font/NotoSansTamil-Regular.eot');
+    src: url('../font/NotoSansTamil-Regular.eot?#iefix') format('embedded-opentype'),
+         url('../font/NotoSansTamil-Regular.woff') format('woff'),
+		 url('../font/NotoSansTamil-Regular.woff2') format('woff2'),
+         url('../font/NotoSansTamil-Regular.ttf') format('truetype');
+  font-weight: 400;
+  }
+  
+  @font-face {
+  font-family: 'Noto Sans Tamil';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../font/NotoSansTamil-Bold.eot');
+  src: url('../font/NotoSansTamil-Bold.eot?#iefix') format('embedded-opentype'),
+       url('../font/NotoSansTamil-Bold.woff2') format('woff2'),
+       url('../font/NotoSansTamil-Bold.woff') format('woff'),
+       url('../font/NotoSansTamil-Bold.ttf') format('truetype');
+}
+
+ 
+ 
+  /* Android jQM Font Style Overrides */
+  body  * {
+    font-family: "Noto Sans Tamil" !important;
+  }
+
+
 html {
 	font-size: 100%;
+	 font-family: 'Noto Sans Tamil';
 }
 
 iframe,
@@ -27,6 +81,17 @@ height: auto;
 }
 
 
+.wp-video, video.wp-video-shortcode, .mejs-container, .mejs-overlay.load {
+	width: 100% !important;
+	height: 100% !important;
+}
+.wp-video, video.wp-video-shortcode {
+	max-width: 100% !important;
+}
+video.wp-video-shortcode {
+	position: relative;
+}
+
 body,
 input,
 select,
@@ -35,7 +100,7 @@ button,
 .ui-btn {
 	font-size: 1em;
 	line-height: 1.3;
-	 font-family: "Helvetica Neue",Helvetica,Arial,sans-serif /*{global-font-family}*/;
+	 font-family: "Noto Sans Tamil" /*{global-font-family}*/;
 }
 legend,
 .ui-input-text input,
