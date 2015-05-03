@@ -10,7 +10,6 @@
 - Load offline contents
 - Pull to refresh latest contents
 - Search to include all content, not based on loads contents...
-- Search appears only after typed 3 characters..
 
 # Version History
 
