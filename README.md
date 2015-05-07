@@ -5,11 +5,11 @@
 # To Do List
 
 - Scroll to bottom to load more contents (“Infinite” Scroll to Load More Content)
-- Load only first 20 posts on startup - balance load on scroll down..
 - Push Notifications
 - Load offline contents
+- Custom Tamil fonts
 - Pull to refresh latest contents
-- Search to include all content, not based on loads contents...
+- Responsive for YouTube, Video & Image in Posts pages 
 
 # Version History
 

@@ -62,13 +62,13 @@
  
   /* Android jQM Font Style Overrides */
   body  * {
-    font-family: "Noto Sans Tamil" !important;
+    font-family: "Droid Sans Tamil" !important;
   }
 
 
 html {
 	font-size: 100%;
-	 font-family: 'Noto Sans Tamil';
+	 font-family: 'Droid Sans Tamil';
 }
 
 iframe,
@@ -100,7 +100,7 @@ button,
 .ui-btn {
 	font-size: 1em;
 	line-height: 1.3;
-	 font-family: "Noto Sans Tamil" /*{global-font-family}*/;
+	 font-family: "Droid Sans Tamil" /*{global-font-family}*/;
 }
 legend,
 .ui-input-text input,
