@@ -14,7 +14,10 @@ $(document).on('pageshow', function () {
 
 var postid = getQueryVariable("id");
 
-$( document ).on( "pagebeforeshow", "#postIndex", function() {
+        
+    
+
+$( document ).on( "pageinit", "#postIndex", function() {
 
 	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=1&count=100";
 
@@ -28,6 +31,7 @@ $( document ).on( "pagebeforeshow", "#postIndex", function() {
 		    success: function(json) {
 		    	if(json.status=="ok") {
 					posts(json);
+					console.log('Page requested');
 		    	}
 		    	else {
 		    		console.log("error");
@@ -460,7 +464,7 @@ function posts(json) {
         $("#postsList").listview("refresh");
 
 	}	
-
+  limit_posts();	
 }
 
 function open_browser(link)
@@ -478,3 +482,18 @@ function getParameter(query, url) {
 	else return false;
 }
 
+function limit_posts(){
+    /*dh=$( document ).height();
+    
+ 	 ul = $('ul#postsList >li:eq(0)').height();
+ 	
+ 	 ul*=2;
+ 	 console.log(ul);
+ 	 ul-=3.25;
+ 	 litod=Math.round(dh/ul); */
+ 	 litod=15; /* LIst items TO Display */
+ 	 
+	$('ul#postsList>li:nth-child('+litod+')').nextAll().css("display","none");
+	 listlength=$('ul#postsList >li').length; 
+        
+}
