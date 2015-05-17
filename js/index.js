@@ -11,356 +11,217 @@ $(document).on('pageshow', function () {
 	$.mobile.loading( "hide" );
     flag=false;
 }); 
+function init_db()
+{
+	 db = window.openDatabase("news", "1.0", "Just a Dummy DB", 200000);
+}
 
-var postid = getQueryVariable("id");
-
-        
-    
+init_db();
+ 
 
 $( document ).on( "pageinit", "#postIndex", function() {
-
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=1&count=100";
-
-		$.ajax({
-		   type: 'GET',
-		    url: url,
-		    async: false,
-		    jsonpCallback: 'callback',
-		    contentType: "application/json",
-		    dataType: 'jsonp',
-		    success: function(json) {
-		    	if(json.status=="ok") {
-					posts(json);
-					console.log('Page requested');
-		    	}
-		    	else {
-		    		console.log("error");
-		    	}
-		       
-		    },
-		    error: function(e) {
-		       console.log(e.message);
-		    }
-		});
-	 
+     create_db_table();
+     count_db();
 });
 
 
+function check_posts(databaselength){
+    var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=1&count=100";
+	$.ajax({
+	   type: 'GET',
+	    url: url,
+	    async: false,
+	    jsonpCallback: 'callback',
+	    contentType: "application/json",
+	    dataType: 'jsonp',
+	    success: function(json) {
+
+	    	if(json.status=="ok") {
+	    		jsonlength=json.posts.length;		    		 
+            	db.transaction(function(tx) {
+                   tx.executeSql("select * from news_posts;", [], function(tx, res) {
+        	            databaselength=res.rows.length;
+                        if(jsonlength>databaselength){
+				           console.log('Database is need to update');
+				           get_posts();
+				        } else {
+				   	      console.log('Database is uptodate');
+				        } 
+                    });    
+                });
+	    	}
+	    	else {
+	    		console.log("error");
+	    	}	 
+
+	    },
+	    error: function(e) {
+	       console.log(e.message);
+	    }
+	});
+}
+
+function get_posts(url){    
+    var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=1&count=100";
+	$.ajax({
+	    type: 'GET',
+	    url: url,
+	    async: false,
+	    jsonpCallback: 'callback',
+	    contentType: "application/json",
+	    dataType: 'jsonp',
+	    success: function(json) {
+	    	if(json.status=="ok") {
+				posts(json);    
+	    	}
+	    	else {
+	    		console.log("error");
+	    	}		       
+	    },
+	    error: function(e) {
+	       console.log(e.message);
+	    }
+	});
+}
+
+function drop_db_table(){
+    db.transaction(function(tx) {
+	    tx.executeSql('DROP TABLE IF  EXISTS news_posts ');
+	});
+}
+
+function count_db(){
+    db.transaction(function(tx) {
+        tx.executeSql("select * from news_posts;", [], function(tx, res) {             
+            if(res.rows.length!=0){
+                var html = "";               
+			  	for (var i = 0; i < res.rows.length; i++){
+					postid=res.rows.item(i).id;
+				    postthumbnail=res.rows.item(i).thumbnail;
+				    postcontent=res.rows.item(i).title;
+				    date=res.rows.item(i).date;
+			        html = html + "<li data-icon=\"false" + "\">" + "<a href=\"post.html?id=" + postid + "\">" + '<img src="' + postthumbnail + '"/ height="80px"/ width="80px"/>' + "<h3>" + postcontent + "</h3>" + "<p>" + date + "</p></a></li>";
+                    document.getElementById("postsList").innerHTML = html;                   
+				}
+				$("#postsList").listview("refresh");	
+                limit_posts();
+                } else {
+              	get_posts();
+            	console.log('Database is empty.. Getting posts from the server.');
+            }
+        });        
+    });
+    check_posts();
+}
+function show_db_slug_posts(slug){
+	qu1='select * from news_posts where slug="'+ slug+ '" ';
+    db.transaction(function(tx) {
+        tx.executeSql(qu1, [], function(tx, res) { 
+                var html = "";               
+			  	for (var i = 0; i < res.rows.length; i++){
+					postid=res.rows.item(i).id;
+				    postthumbnail=res.rows.item(i).thumbnail;
+				    postcontent=res.rows.item(i).title;
+				    date=res.rows.item(i).date;
+			        html = html + "<li data-icon=\"false" + "\">" + "<a href=\"post.html?id=" + postid + "\">" + '<img src="' + postthumbnail + '"/ height="80px"/ width="80px"/>' + "<h3>" + postcontent + "</h3>" + "<p>" + date + "</p></a></li>";
+                    document.getElementById("postsList").innerHTML = html;                   
+				}
+				$("#postsList").listview("refresh");	
+                limit_posts();            
+        });        
+    });
+    check_posts();
+}
+
+function create_db_table(){
+    db.transaction(function(tx) {
+        tx.executeSql('CREATE TABLE  IF NOT EXISTS news_posts (id unique,title text, content text,slug text,thumbnail text,url text,date datetime)');
+    });
+}
+
+function select_db_post(postid){
+	qu='SELECT * from news_posts where id = '+ postid+ '';	 
+	db.transaction(function(tx) {		
+        tx.executeSql(qu, [], function(tx, res) {                    
+		    posttitle=res.rows.item(0).title;
+		    postcontent=res.rows.item(0).content;	
+		    var html = "<h3>"+posttitle+"</h3>";
+            html += "<p>"+postcontent+"</p>";
+            document.getElementById("post").innerHTML = html;
+        },
+        function(err) {
+          console.log("Error processing SQL: "+err.code);
+        });
+    });
+}
 
 
 $( document ).on( "pagebeforeshow", "#postLanguage", function() {
-
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=language&count=100";
-
-		$.ajax({
-		   type: 'GET',
-		    url: url,
-		    async: false,
-		    jsonpCallback: 'callback',
-		    contentType: "application/json",
-		    dataType: 'jsonp',
-		    success: function(json) {
-		    	if(json.status=="ok") {
-					posts(json);
-		    	}
-		    	else {
-		    		console.log("error");
-		    	}
-		       
-		    },
-		    error: function(e) {
-		       console.log(e.message);
-		    }
-		});
-	 
+    slug='language';
+	show_db_slug_posts(slug);	 
 });
 
 $( document ).on( "pagebeforeshow", "#postRace", function() {
-
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=race&count=100";
-
-		$.ajax({
-		   type: 'GET',
-		    url: url,
-		    async: false,
-		    jsonpCallback: 'callback',
-		    contentType: "application/json",
-		    dataType: 'jsonp',
-		    success: function(json) {
-		    	if(json.status=="ok") {
-					posts(json);
-		    	}
-		    	else {
-		    		console.log("error");
-		    	}
-		       
-		    },
-		    error: function(e) {
-		       console.log(e.message);
-		    }
-		});
-	 
+	slug='race';
+	show_db_slug_posts(slug);
 });
 
 $( document ).on( "pagebeforeshow", "#postCulture", function() {
-
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=culture&count=100";
-
-		$.ajax({
-		   type: 'GET',
-		    url: url,
-		    async: false,
-		    jsonpCallback: 'callback',
-		    contentType: "application/json",
-		    dataType: 'jsonp',
-		    success: function(json) {
-		    	if(json.status=="ok") {
-					posts(json);
-		    	}
-		    	else {
-		    		console.log("error");
-		    	}
-		       
-		    },
-		    error: function(e) {
-		       console.log(e.message);
-		    }
-		});
-	 
+	slug='culture';
+	show_db_slug_posts(slug);	 
 });
 
 $( document ).on( "pagebeforeshow", "#postTechnology", function() {
-
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=technology&count=100";
-
-		$.ajax({
-		   type: 'GET',
-		    url: url,
-		    async: false,
-		    jsonpCallback: 'callback',
-		    contentType: "application/json",
-		    dataType: 'jsonp',
-		    success: function(json) {
-		    	if(json.status=="ok") {
-					posts(json);
-		    	}
-		    	else {
-		    		console.log("error");
-		    	}
-		       
-		    },
-		    error: function(e) {
-		       console.log(e.message);
-		    }
-		});
-	 
+	slug='technology';
+	show_db_slug_posts(slug);	 
 });
 
 $( document ).on( "pagebeforeshow", "#postScience", function() {
-
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=science&count=100";
-
-		$.ajax({
-		   type: 'GET',
-		    url: url,
-		    async: false,
-		    jsonpCallback: 'callback',
-		    contentType: "application/json",
-		    dataType: 'jsonp',
-		    success: function(json) {
-		    	if(json.status=="ok") {
-					posts(json);
-		    	}
-		    	else {
-		    		console.log("error");
-		    	}
-		       
-		    },
-		    error: function(e) {
-		       console.log(e.message);
-		    }
-		});
-	 
+	slug='science';
+	show_db_slug_posts(slug);	 
 });
 
 $( document ).on( "pagebeforeshow", "#postLifeology", function() {
-
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=lifeology&count=100";
-
-		$.ajax({
-		   type: 'GET',
-		    url: url,
-		    async: false,
-		    jsonpCallback: 'callback',
-		    contentType: "application/json",
-		    dataType: 'jsonp',
-		    success: function(json) {
-		    	if(json.status=="ok") {
-					posts(json);
-		    	}
-		    	else {
-		    		console.log("error");
-		    	}
-		       
-		    },
-		    error: function(e) {
-		       console.log(e.message);
-		    }
-		});
-	 
+	slug='lifeology';
+	show_db_slug_posts(slug);	 
 });
 
 
 $( document ).on( "pagebeforeshow", "#postFinance", function() {
-
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=finance&count=100";
-
-		$.ajax({
-		   type: 'GET',
-		    url: url,
-		    async: false,
-		    jsonpCallback: 'callback',
-		    contentType: "application/json",
-		    dataType: 'jsonp',
-		    success: function(json) {
-		    	if(json.status=="ok") {
-					posts(json);
-		    	}
-		    	else {
-		    		console.log("error");
-		    	}
-		       
-		    },
-		    error: function(e) {
-		       console.log(e.message);
-		    }
-		});
-	 
+	slug='finance';
+	show_db_slug_posts(slug);	 
 });
 
 $( document ).on( "pagebeforeshow", "#postHistory", function() {
-
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=history&count=100";
-
-		$.ajax({
-		   type: 'GET',
-		    url: url,
-		    async: false,
-		    jsonpCallback: 'callback',
-		    contentType: "application/json",
-		    dataType: 'jsonp',
-		    success: function(json) {
-		    	if(json.status=="ok") {
-					posts(json);
-		    	}
-		    	else {
-		    		console.log("error");
-		    	}
-		       
-		    },
-		    error: function(e) {
-		       console.log(e.message);
-		    }
-		});
-	 
+	slug='history';
+	show_db_slug_posts(slug);	 
 });
 
 $( document ).on( "pagebeforeshow", "#postPhilosophy", function() {
-
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=philosophy&count=100";
-
-		$.ajax({
-		   type: 'GET',
-		    url: url,
-		    async: false,
-		    jsonpCallback: 'callback',
-		    contentType: "application/json",
-		    dataType: 'jsonp',
-		    success: function(json) {
-		    	if(json.status=="ok") {
-					posts(json);
-		    	}
-		    	else {
-		    		console.log("error");
-		    	}
-		       
-		    },
-		    error: function(e) {
-		       console.log(e.message);
-		    }
-		});
-	 
+	slug='philosophy';
+	show_db_slug_posts(slug);	 
 });
-
 
 $( document ).on( "pagebeforeshow", "#postMusic", function() {
-
-	var url = "http://pulanam.omtamil.com/api/get_recent_posts/?json=get_category_posts&slug=music&count=100";
-
-		$.ajax({
-		   type: 'GET',
-		    url: url,
-		    async: false,
-		    jsonpCallback: 'callback',
-		    contentType: "application/json",
-		    dataType: 'jsonp',
-		    success: function(json) {
-		    	if(json.status=="ok") {
-					posts(json);
-		    	}
-		    	else {
-		    		console.log("error");
-		    	}
-		       
-		    },
-		    error: function(e) {
-		       console.log(e.message);
-		    }
-		});
-	 
+	slug='music';
+	show_db_slug_posts(slug);	 
 });
-
 
 
 $( document ).on( "pagebeforeshow", "#postPage", function() {
-                
-    var postid = getQueryVariable("id");
-    var url = "http://pulanam.omtamil.com/api/get_post/?post_id="+postid+"&callback=?";
-
-    $.ajax({
-       type: 'GET',
-        url: url,
-        async: false,
-        jsonpCallback: 'callback',
-        contentType: "application/json",
-        dataType: 'jsonp',
-        success: function(json) {
-            if(json.status=="ok") {
-                post(json);
-            }
-            else {
-                console.log("error");
-            }
-           
-        },
-        error: function(e) {
-           console.log(e.message);
-        }
-    });
-     
+    postid = getQueryVariable("id");
+    select_db_post(postid);     
 });
-
-
 
 function getQueryVariable(variable)
 {
    var query = window.location.search.substring(1);
    var vars = query.split("&");
-   for (var i=0;i<vars.length;i++) {
-           var pair = vars[i].split("=");
-           if(pair[0] == variable){return pair[1];}
-   }
-   return(false);
+    for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");
+        if(pair[0] == variable){return pair[1];}
+    }
+    return(false);
 }
 
 document.addEventListener('deviceready', function() {
@@ -457,14 +318,32 @@ function posts(json) {
 	  	else {
 	  		var date = "null";
 	  	}
-        
+	  	
+	  	if(json.posts[i])
+	  	{   
+	  		data=json.posts[i];
+	  		insert_db(data);
+	  	}
+	  	console.log(i+" = "+json.posts[i].categories[0].slug);
         html = html + "<li data-icon=\"false" + "\">" + "<a href=\"post.html?id=" + postid + "\">" + '<img src="' + postthumbnail + '"/ height="80px"/ width="80px"/>' + "<h3>" + postcontent + "</h3>" + "<p>" + date + "</p></a></li>";
         
         document.getElementById("postsList").innerHTML = html;
         $("#postsList").listview("refresh");
-
+     
 	}	
   limit_posts();	
+}
+
+function insert_db(data){
+	  
+      db.transaction(function(tx) {
+       tx.executeSql("INSERT OR REPLACE INTO news_posts   (id,title,content,slug,thumbnail,url,date) VALUES (?,?,?,?,?,?,?)", [data.id,data.title,data.content,data.categories[0].slug,data.thumbnail,data.url,data.date], function(tx, res) {
+           
+       },
+           function(err) {
+          console.log("Error processing SQL: "+err.code);
+        });
+    });
 }
 
 function open_browser(link)
@@ -482,18 +361,8 @@ function getParameter(query, url) {
 	else return false;
 }
 
-function limit_posts(){
-    /*dh=$( document ).height();
-    
- 	 ul = $('ul#postsList >li:eq(0)').height();
- 	
- 	 ul*=2;
- 	 console.log(ul);
- 	 ul-=3.25;
- 	 litod=Math.round(dh/ul); */
- 	 litod=15; /* LIst items TO Display */
- 	 
+function limit_posts(){    
+    litod=10;  	 
 	$('ul#postsList>li:nth-child('+litod+')').nextAll().css("display","none");
-	 listlength=$('ul#postsList >li').length; 
-        
+	listlength=$('ul#postsList >li').length;       
 }

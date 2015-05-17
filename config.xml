@@ -86,6 +86,10 @@ MUHELEN MURUGAN
          <param name="android-package" value="com.rjfun.cordova.plugin.AdMob"/>
       </feature>
       
+      <feature name="SQLitePlugin">
+ <param name="android-package" value="org.pgsqlite.SQLitePlugin" />
+ </feature>
+ <plugin name="SQLitePlugin" value="org.pgsqlite.SQLitePlugin"/>
  	 	
      <gap:plugin name="org.apache.cordova.file" />
      <gap:plugin name="org.apache.cordova.file-transfer" />
@@ -101,6 +105,8 @@ MUHELEN MURUGAN
      <gap:plugin name="com.rjfun.cordova.plugin.admob" source="plugins.cordova.io"/>
      
      <gap:plugin name="net.tunts.webintent" version="0.2.1" />
+
+     <gap:plugin name="com.millerjames01.sqlite-plugin" version="1.0.1" />
 
     <access origin="*" />
 </widget>
