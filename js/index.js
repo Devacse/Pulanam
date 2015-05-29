@@ -11,9 +11,19 @@ $(document).on('pageshow', function () {
 	$.mobile.loading( "hide" );
     flag=false;
 }); 
+
+
+$(document)
+  .ajaxStart(function () {
+    $.mobile.loading( "show" );
+  })
+  .ajaxStop(function () {
+    $.mobile.loading( "hide" );
+  });
+
 function init_db()
 {
-	 db = window.openDatabase("news", "1.0", "Just a Dummy DB", 200000);
+	 db = window.openDatabase("news", "1.0", "Pulanam Post Database.", 200000);
 }
 
 init_db();
@@ -100,7 +110,7 @@ function count_db(){
 				    postthumbnail=res.rows.item(i).thumbnail;
 				    postcontent=res.rows.item(i).title;
 				    date=res.rows.item(i).date;
-			        html = html + "<li data-icon=\"false" + "\">" + "<a href=\"post.html?id=" + postid + "\">" + '<img src="' + postthumbnail + '"/ height="80px"/ width="80px"/>' + "<h3>" + postcontent + "</h3>" + "<p>" + date + "</p></a></li>";
+			        html = html + "<li data-icon=\"false" + "\">" + "<a href=\"post.html?id=" + postid + "\" data-transition=\"slide"+"\">" + '<img src="' + postthumbnail + '"/ height="80px"/ width="80px"/>' + "<h3>" + postcontent + "</h3>" + "<p>" + date + "</p></a></li>";
                     document.getElementById("postsList").innerHTML = html;                   
 				}
 				$("#postsList").listview("refresh");	
@@ -123,7 +133,7 @@ function show_db_slug_posts(slug){
 				    postthumbnail=res.rows.item(i).thumbnail;
 				    postcontent=res.rows.item(i).title;
 				    date=res.rows.item(i).date;
-			        html = html + "<li data-icon=\"false" + "\">" + "<a href=\"post.html?id=" + postid + "\">" + '<img src="' + postthumbnail + '"/ height="80px"/ width="80px"/>' + "<h3>" + postcontent + "</h3>" + "<p>" + date + "</p></a></li>";
+			        html = html + "<li data-icon=\"false" + "\">" + "<a href=\"post.html?id=" + postid + "\" data-transition=\"slide"+"\">" + '<img src="' + postthumbnail + '"/ height="80px"/ width="80px"/>' + "<h3>" + postcontent + "</h3>" + "<p>" + date + "</p></a></li>";
                     document.getElementById("postsList").innerHTML = html;                   
 				}
 				$("#postsList").listview("refresh");	
@@ -325,7 +335,7 @@ function posts(json) {
 	  		insert_db(data);
 	  	}
 	  	console.log(i+" = "+json.posts[i].categories[0].slug);
-        html = html + "<li data-icon=\"false" + "\">" + "<a href=\"post.html?id=" + postid + "\">" + '<img src="' + postthumbnail + '"/ height="80px"/ width="80px"/>' + "<h3>" + postcontent + "</h3>" + "<p>" + date + "</p></a></li>";
+        html = html + "<li data-icon=\"false" + "\">" + "<a href=\"post.html?id=" + postid + "\" data-transition=\"slide"+"\">" + '<img src="' + postthumbnail + '"/ height="80px"/ width="80px"/>' + "<h3>" + postcontent + "</h3>" + "<p>" + date + "</p></a></li>";
         
         document.getElementById("postsList").innerHTML = html;
         $("#postsList").listview("refresh");

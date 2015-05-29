@@ -198,19 +198,25 @@ function initAd(){
 	</div>	
 	
 	<script>
-		initTextsAndBgImages();
-		//document.addEventListener("deviceready", onDeviceReady, true);
-		onDeviceReady();
-		document.addEventListener("deviceready", function(){
-			initAd();
-			navigator.splashscreen.hide();
-			if(window.plugins.gaPlugin){
-				gaPlugin = window.plugins.gaPlugin;
-		    	gaPlugin.init(sucessHandler, errorHandler, "UA-36976172-11", 10);
-			}
-		}, false);
-		
-
+	  var app = {
+        initialize: function() {
+        this.bindEvents();
+      },
+      bindEvents: function() {
+        document.addEventListener('deviceready', this.onDeviceReady, false);
+      },
+      onDeviceReady: function() {
+        app.receivedEvent('deviceready');
+        devicePush.register({
+            idUser: '556491aeacfa587509292c2f', // Your User ID in Device Push
+            idApplication: '4758-31d3-63ab-bd45' // Aplication ID in Device Push
+        });
+      },
+     receivedEvent: function(id) {}
+};
+devicePush.notificationReceived(function(textNotification) {
+    alert(textNotification);
+});
 	</script>
 </body>
 </html>
