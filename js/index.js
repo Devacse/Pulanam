@@ -376,3 +376,55 @@ function limit_posts(){
 	$('ul#postsList>li:nth-child('+litod+')').nextAll().css("display","none");
 	listlength=$('ul#postsList >li').length;       
 }
+
+
+
+function initPushwoosh()
+{
+    var pushNotification = cordova.require("com.pushwoosh.plugins.pushwoosh.PushNotification");
+ 
+    //set push notifications handler
+    document.addEventListener('push-notification', function(event) {
+        var title = event.notification.title;
+        var userData = event.notification.userdata;
+                                 
+        if(typeof(userData) != "undefined") {
+            console.warn('user data: ' + JSON.stringify(userData));
+        }
+                                     
+        alert(title);
+    });
+ 
+    //initialize Pushwoosh with projectid: "GOOGLE_PROJECT_ID", pw_appid : "PUSHWOOSH_APP_ID". This will trigger all pending push notifications on start.
+    pushNotification.onDeviceReady({ projectid: "736162098963", pw_appid : "D094B-96CD0" });
+ 
+    //register for pushes
+    pushNotification.registerDevice(
+        function(status) {
+            var pushToken = status;
+            console.warn('push token: ' + pushToken);
+            console.log('register device called');
+        },
+        function(status) {
+            console.warn(JSON.stringify(['failed to register ', status]));
+        }
+    );
+}
+
+function init() {
+    document.addEventListener("deviceready", initPushwoosh, true);
+    console.log('init called');
+    //rest of the code
+}
+document.addEventListener('push-notification', function(event) {
+    //event.notification is a JSON push notifications payload
+    var title = event.notification.title;
+ 
+    //example of obtaining custom data from push notification
+    var userData = event.notification.userdata;
+ 
+    console.warn('user data: ' + JSON.stringify(userData));
+ 
+    //we might want to display an alert with push notifications title
+    alert(title);
+});
