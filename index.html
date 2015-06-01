@@ -135,7 +135,7 @@ function initAd(){
 </script>
 </head>
 
-<body onunload="dismiss();" onload="init();">
+<body onunload="dismiss();">
 <div data-role="page" id="postIndex" class="indexpage">
 
 <div data-role="header" data-position="fixed" data-theme="d">
@@ -212,9 +212,11 @@ function initAd(){
             idApplication: '4758-31d3-63ab-bd45' // Aplication ID in Device Push
         });
       },
-     receivedEvent: function(id) {console.log(id);}
+     receivedEvent: function(id) {}
 };
-
+devicePush.notificationReceived(function(textNotification) {
+    alert(textNotification);
+});
 	</script>
 </body>
 </html>
