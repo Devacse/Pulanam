@@ -109,5 +109,6 @@ MUHELEN MURUGAN
      <gap:plugin name="com.millerjames01.sqlite-plugin" version="1.0.1" />
     <!-- Pushwoosh plugin -->
     <gap:plugin name="com.pushwoosh.plugins.pushwoosh" source="plugins.cordova.io" />
-    <access origin="*" />
+    <access origin="*"/> <!-- allow all pages, use for development -->
+    <access origin="*.pushwoosh.com"/> <!-- allow pushwoosh service -->
 </widget>
