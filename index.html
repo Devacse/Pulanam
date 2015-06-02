@@ -198,26 +198,5 @@ function initAd(){
 	<div data-role="footer" class="ui-bar">
 	</div>	
 	
-	<script>
-	  var app = {
-        initialize: function() {
-        this.bindEvents();
-      },
-      bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-      },
-      onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-        devicePush.register({
-            idUser: '556491aeacfa587509292c2f', // Your User ID in Device Push
-            idApplication: '4758-31d3-63ab-bd45' // Aplication ID in Device Push
-        });
-      },
-     receivedEvent: function(id) {}
-};
-devicePush.notificationReceived(function(textNotification) {
-    alert(textNotification);
-});
-	</script>
 </body>
 </html>
