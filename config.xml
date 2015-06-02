@@ -107,9 +107,7 @@ MUHELEN MURUGAN
      <gap:plugin name="net.tunts.webintent" version="0.2.1" />
 
      <gap:plugin name="com.millerjames01.sqlite-plugin" version="1.0.1" />
-     <gap:plugin name="com.devicepush.cordova-phonegap" source="plugins.cordova.io"></gap:plugin>
-
-
+    <!-- Pushwoosh plugin -->
+    <gap:plugin name="com.pushwoosh.plugins.pushwoosh" source="plugins.cordova.io" />
     <access origin="*" />
-    <access origin="*.devicepush.com"></access>
 </widget>
